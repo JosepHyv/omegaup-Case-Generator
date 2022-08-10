@@ -31,12 +31,14 @@ def cli() -> argparse.Namespace:
     parser.add_argument(
         '-o', '--outputs',
         action='store_true',
+        default=cwd(),
         help='recibe la ruta de los casos de entrada, la ruta del ejecutable de solucion y la ruta de destino(por omision=CURRENT_WORKING_DIR) y genera solo los casos de salida'
     )
 
     parser.add_argument(
         '-c', '--case-name',
         action='store_true',
+        default=CASE_NAME,
         help="Recibe el nombre que llevaran los casos de entrada y salida (todos lo casos se nombraran como caseName#.in caseName#.out e.j casoFacil5.in casoFacil5.out)"
     )
 
@@ -58,6 +60,12 @@ def cli() -> argparse.Namespace:
         'sourceSolution',
         type=pathlib.Path,
         help="Dirección del ejecutable/nombre ejecutable generador de solucion"
+    )
+
+    parser.add_argument(
+        'destinationFolder',
+        type=pathlib.Path,
+        help="Dirección en donde se guardaran las input y outputs"
     )
 
     return parser.parse_args()
