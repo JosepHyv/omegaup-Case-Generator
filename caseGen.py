@@ -35,17 +35,37 @@ def cli() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        '-n', '--case-name',
+        '-c', '--case-name',
         action='store_true',
         help="Recibe el nombre que llevaran los casos de entrada y salida (todos lo casos se nombraran como caseName#.in caseName#.out e.j casoFacil5.in casoFacil5.out)"
+    )
+
+    parser.add_argument(
+        '-t', '--total-cases',
+        dest="numero de casos",
+        type=int,
+        default=10,
+        help="denota el numero de casos que se generarán"
+    )
+
+    parser.add_argument(
+        'sourceGenerator',
+        type=pathlib.Path,
+        help="Dirección del ejecutable/nombre ejecutable generador de las entradas"
+    )
+
+    parser.add_argument(
+        'sourceSolution',
+        type=pathlib.Path,
+        help="Dirección del ejecutable/nombre ejecutable generador de solucion"
     )
 
     return parser.parse_args()
     
 
 def main():
-    agrs = cli()
-    print(cwd())
+    args = cli()
+    print(args)
 
 
 if __name__ == "__main__":
