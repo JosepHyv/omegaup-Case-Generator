@@ -116,7 +116,7 @@ def callInputGenerator(inputGen :pathlib.Path, destinationDir:pathlib.Path, case
     excecName = str(excecName[1])
     executableLine = str(os.path.join(str(tailName),("./" + excecName)))
     shellArgs = shlex.split(executableLine)
-
+    print("Ejecutando {}".format(shellArgs))
     try:
         #outBuffer = subprocess.run(shellArgs, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) 
         outBuffer = subprocess.Popen(shellArgs, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True).communicate()
@@ -126,22 +126,20 @@ def callInputGenerator(inputGen :pathlib.Path, destinationDir:pathlib.Path, case
 
     global EXTENSIONS
     outName = caseName + EXTENSIONS[0]
-    print("esto es --->" , caseName)
+    
 
     writeFile(destinationDir, outName, outBuffer[0] ,overridingPermision)
     
     
 
-def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Path, caseName:str, overridingPermision) -> None:
+def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Path, caseInputDir:pathlib.Path, overridingPermision) -> None:
     excecName = os.path.split(solutionGen)
     tailName = excecName[0]
     excecName = str(excecName[1])
     executableLine = str(os.path.join(str(tailName),("./" + excecName)))
-    global EXTENSIONS
-    nameFile = os.path.join(destinationDir, (caseName + EXTENSIONS[0]) )
-    #executableLine += " < " + str(nameFile)
+    nameFile = caseInputDir
     shellArgs = shlex.split(executableLine)
-    print(shellArgs)
+    print("Ejecutando {}".format(shellArgs))
     try: 
         with open(nameFile, "rb") as fileIn:
                 data = fileIn.read()
@@ -156,22 +154,75 @@ def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Pat
     if 'bytes' in buffertype:
        fileBuffer = outBuffer[0].decode('utf-8')
     
-    nameFile = caseName + EXTENSIONS[1]
+    global EXTENSIONS
+    namefile = os.path.splitext(caseInputDir)[0]
+    nameFile = nameFile+ EXTENSIONS[1]
     writeFile(destinationDir, nameFile, fileBuffer, overridingPermision)
     
 
 
-def checkDirs():
-    pass
+def checkDirs(listDirs):
+    ok = True
+    notOkayDirs = [pathlib.Path(dir) for dir in listDirs if not os.path.exists(dir)]
+    if len(notOkayDirs):
+        ok = False
+        print("Error:")
+        print("los siguientes directorios o archivos no existen: ")
+        for dir in notOkayDirs:
+            print("\t {}".format(dir))
 
+    return ok
+
+def listInputs(source: pathlib.Path) -> list:
+    lista = os.listdir(source)
+    inputs = [str(file) for file in lista if ".in" in str(pathlib.Path(file).suffix)]
+    print(*inputs, sep="\n")
+    return inputs
 
 def main():
-    args = cli()
-    for c in range(args.total_cases):
-        nameFile = args.case_name + str(c+1)
-        callInputGenerator(args.sourceGenerator, args.destinationFolder, nameFile, args.overriding)
-        callSolutionGenerator(args.sourceSolution, args.destinationFolder, nameFile, args.overriding)
-    print(args)
+    global EXTENSIONS
+    try:
+        args = cli()
+        if not checkDirs([args.sourceGenerator, args.sourceSolution, args.destinationFolder]):
+            exit(1)
+
+        if args.outputs:
+            if isExecutable(args.sourceGenerator):
+                print("Error: {} es un ejecutable".format(args.sourceGenerator))
+                exit(1)
+            elif os.path.isfile(args.sourceGenerator):
+                print("Error: {} es un archivo y no un directorio".format(args.sourceGenerator))
+                exit(1)
+            elif not isExecutable(args.sourceSolution):
+                print("Error: {} No un ejecutable".format(args.sourceGenerator))
+                exit(1)
+
+            if args.total_cases != 10:
+                print("El uso de -t es innecesario")
+
+            inputsFiles = listInputs(args.sourceGenerator)
+            if not len(inputsFiles):
+                print("Error: No existen archivos de entrada\nen{}".format(args.sourceGenerator))
+                exit(1)
+
+            for file in inputsFiles:
+                completeDir = os.path.abspath(file)
+                currentInputCase = os.path.splitext(completeDir)[0]
+                print("Current --> {}".format((currentInputCase + EXTENSION[1])))
+                callSolutionGenerator(args.sourceSolution, args.destinationFolder, completeDir, args.overriding)
+
+
+        else:
+            for c in range(args.total_cases):
+                nameFile = args.case_name + str(c+1)
+                print("Current -->" , nameFile)
+                callInputGenerator(args.sourceGenerator, args.destinationFolder, nameFile, args.overriding)
+                currentInputDir = os.path.join(args.destinationFolder, (nameFile + EXTENSIONS[0]))
+                callSolutionGenerator(args.sourceSolution, args.destinationFolder, currentInputDir, args.overriding)
+    except KeyboardInterrupt:
+        print("Deteniendo el programa")
+        print("nos vemos luego 😎")
+
 
 if __name__ == "__main__":
     main()
