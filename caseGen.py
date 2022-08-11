@@ -131,7 +131,26 @@ def callInputGenerator(inputGen :pathlib.Path, destinationDir:pathlib.Path, case
     
     
 
-def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Path, caseName:str) -> None:
+def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Path, caseName:str, overridingPermision) -> None:
+    excecName = os.path.split(solutionGen)
+    tailName = excecName[0]
+    excecName = str(excecName[1])
+    executableLine = str(os.path.join(str(tailName),("./" + excecName)))
+    global EXTENSIONS
+    nameFile = os.path.join(destinationDir, (caseName + EXTENSIONS[0]) )
+    #executableLine += " < " + str(nameFile)
+    shellArgs = shlex.split(executableLine)
+    print(shellArgs)
+    try: 
+        with open(nameFile, "rb") as fileIn:
+                data = fileIn.read()
+        process = subprocess.Popen(shellArgs, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        outBuffer = process.communicate(input=data)
+        #Popen is best for redirect data :3
+    except Exception as e:
+        print("Ocurrio un error {}".format(e))
+
+    print(outBuffer)
     pass
 
 
@@ -143,7 +162,7 @@ def main():
     args = cli()
       #  callExecs(args.sourceGenerator, args.sourceSolution, args.case_name)
     callInputGenerator(args.sourceGenerator, args.destinationFolder, args.case_name, args.overriding)
-
+    callSolutionGenerator(args.sourceSolution, args.destinationFolder, args.case_name, args.overriding)
     print(args)
 
 if __name__ == "__main__":
