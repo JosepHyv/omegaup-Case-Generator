@@ -95,6 +95,7 @@ def isExecutable(source : pathlib.Path):
 def writeFile(destinationFolder: pathlib.Path, nameFile :str, buffer,  overridingPermision) -> None:
 
     statusOverriding = overridingPermision
+    destinationFolder = os.path.join(destinationFolder, nameFile)
     if os.path.exists(destinationFolder) and not statusOverriding:
         print("{} ya existe quieres sobreEscribir?".format(nameFile))
         ans = input("[s/N]: ").lower()
@@ -126,8 +127,8 @@ def callInputGenerator(inputGen :pathlib.Path, destinationDir:pathlib.Path, case
     global EXTENSIONS
     outName = caseName + EXTENSIONS[0]
     print("esto es --->" , caseName)
-    inputFileDir = os.path.join(destinationDir, outName)
-    writeFile(inputFileDir, outName, outBuffer[0] ,overridingPermision)
+
+    writeFile(destinationDir, outName, outBuffer[0] ,overridingPermision)
     
     
 
@@ -150,8 +151,14 @@ def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Pat
     except Exception as e:
         print("Ocurrio un error {}".format(e))
 
-    print(outBuffer)
-    pass
+    buffertype = str(type(outBuffer[0]))
+    fileBuffer = outBuffer[0]
+    if 'bytes' in buffertype:
+       fileBuffer = outBuffer[0].decode('utf-8')
+    
+    nameFile = caseName + EXTENSIONS[1]
+    writeFile(destinationDir, nameFile, fileBuffer, overridingPermision)
+    
 
 
 def checkDirs():
@@ -160,9 +167,10 @@ def checkDirs():
 
 def main():
     args = cli()
-      #  callExecs(args.sourceGenerator, args.sourceSolution, args.case_name)
-    callInputGenerator(args.sourceGenerator, args.destinationFolder, args.case_name, args.overriding)
-    callSolutionGenerator(args.sourceSolution, args.destinationFolder, args.case_name, args.overriding)
+    for c in range(args.total_cases):
+        nameFile = args.case_name + str(c+1)
+        callInputGenerator(args.sourceGenerator, args.destinationFolder, nameFile, args.overriding)
+        callSolutionGenerator(args.sourceSolution, args.destinationFolder, nameFile, args.overriding)
     print(args)
 
 if __name__ == "__main__":
