@@ -18,8 +18,6 @@ def cwd() -> pathlib.Path:
     directorioActual = pathlib.Path(directorioActual)
     return directorioActual    
 
-    
-
 def cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="Problem Case Generator",
