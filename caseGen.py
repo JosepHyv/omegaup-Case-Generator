@@ -13,9 +13,9 @@ EXTENSIONS = ['.in', '.out']
 #################
 
 
-def cwd() -> str:
+def cwd() -> pathlib.Path:
     directorioActual = os.getcwd()
-    directorioActual = str(directorioActual)
+    directorioActual = pathlib.Path(directorioActual)
     return directorioActual    
 
     
@@ -105,8 +105,8 @@ def writeFile(destinationFolder: pathlib.Path, nameFile :str, buffer,  overridin
             print("Omitiendo {}".format(nameFile))
 
     if not os.path.exists(destinationFolder) or statusOverriding :
-        with open(destinationFolder, "w") as caseInput:
-            caseInput.write(buffer)
+        with open(destinationFolder, "w") as caseWriting:
+            caseWriting.write(buffer)
 
 
 
@@ -137,11 +137,10 @@ def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Pat
     tailName = excecName[0]
     excecName = str(excecName[1])
     executableLine = str(os.path.join(str(tailName),("./" + excecName)))
-    nameFile = caseInputDir
     shellArgs = shlex.split(executableLine)
     print("Ejecutando {}".format(shellArgs))
     try: 
-        with open(nameFile, "rb") as fileIn:
+        with open(caseInputDir, "rb") as fileIn:
                 data = fileIn.read()
         process = subprocess.Popen(shellArgs, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         outBuffer = process.communicate(input=data)
@@ -155,7 +154,8 @@ def callSolutionGenerator(solutionGen: pathlib.Path, destinationDir :pathlib.Pat
        fileBuffer = outBuffer[0].decode('utf-8')
     
     global EXTENSIONS
-    namefile = os.path.splitext(caseInputDir)[0]
+    nameFile = os.path.basename(caseInputDir)
+    nameFile = os.path.splitext(nameFile)[0]
     nameFile = nameFile+ EXTENSIONS[1]
     writeFile(destinationDir, nameFile, fileBuffer, overridingPermision)
     
@@ -196,6 +196,11 @@ def main():
             elif not isExecutable(args.sourceSolution):
                 print("Error: {} No un ejecutable".format(args.sourceGenerator))
                 exit(1)
+            
+            print(type(args.destinationFolder), type(cwd()), args.destinationFolder == cwd(), sep="\n")
+
+            if args.destinationFolder == cwd():
+                args.destinationFolder = args.sourceGenerator
 
             if args.total_cases != 10:
                 print("El uso de -t es innecesario")
@@ -206,10 +211,11 @@ def main():
                 exit(1)
 
             for file in inputsFiles:
-                completeDir = os.path.abspath(file)
+                completeDir = os.path.join(args.sourceGenerator,file)
                 currentInputCase = os.path.splitext(completeDir)[0]
-                print("Current --> {}".format((currentInputCase + EXTENSION[1])))
+                print("Current --> {}".format((currentInputCase + EXTENSIONS[1])))
                 callSolutionGenerator(args.sourceSolution, args.destinationFolder, completeDir, args.overriding)
+                print("================\n")
 
 
         else:
@@ -219,6 +225,7 @@ def main():
                 callInputGenerator(args.sourceGenerator, args.destinationFolder, nameFile, args.overriding)
                 currentInputDir = os.path.join(args.destinationFolder, (nameFile + EXTENSIONS[0]))
                 callSolutionGenerator(args.sourceSolution, args.destinationFolder, currentInputDir, args.overriding)
+                print("================\n")
     except KeyboardInterrupt:
         print("Deteniendo el programa")
         print("nos vemos luego 😎")
