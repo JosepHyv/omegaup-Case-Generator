@@ -1,0 +1,1 @@
+import omegaupCaseGen.caseGen
