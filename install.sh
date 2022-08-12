@@ -19,15 +19,25 @@ then
 	exit 1
 fi
 
+#creando carpeta temporal 
+mkdir tempInstallation
+cd tempInstallation
+
+#clonando 
+
 git clone https://github.com/JosepHyv/omegaup-Case-Generator.git 
 
 if [[ -d $PROJECT_FOLDER ]]
 then 
 	pip3 install -r "$PROJECT_FOLDER/requeriments.txt"
-	sudo python3 "$PROJECT_FOLDER/setup.py" install
+	cd $PROJECT_FOLDER
+	sudo python3 "setup.py" install
 	caseGen --version
+	echo "========================================="
+	echo "Limpiando carpetas de instalacion"	
+	cd ../..
+	[ -d tempInstallation ] && sudo rm -r tempInstallation
 fi
 
-[ -d $PROJECT_FOLDER ] && rm -r $PROJECT_FOLDER
 
 echo "Finish"
