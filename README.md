@@ -40,12 +40,11 @@ Este programa funciona llamando creando subprocesos mientras llama a los ejectub
 ```bash
 caseGen dir/generadorInputs dir/solucionDelProblema dirDestino(por defecto esta es la dirección actual)
 ```
-
-<script id="asciicast-JlFXq3XjLQ81ugWPcsvea8ChY" src="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY.js" async></script>
+<a href="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY" target="_blank"><img src="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY.svg" /></a>
 
 2. Uso Solo Salidas 
 Esta opcion es util cuando necesitamos generar solo las salidas de cada entrada ya generada previamente
 ```bash
 caseGen -o dirInputs dir/SolucionDelProblema dirDestino(por defecto sera igual a dirInputs)
 ```
-<script id="asciicast-0N21cm3xVpjWPG7Hi8z1zcR6E" src="https://asciinema.org/a/0N21cm3xVpjWPG7Hi8z1zcR6E.js" async></script>
+<a href="https://asciinema.org/a/0N21cm3xVpjWPG7Hi8z1zcR6E" target="_blank"><img src="https://asciinema.org/a/0N21cm3xVpjWPG7Hi8z1zcR6E.svg" /></a>
