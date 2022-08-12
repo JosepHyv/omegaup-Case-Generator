@@ -85,10 +85,11 @@ def cli() -> argparse.Namespace:
     return parser.parse_args()
 
 def isExecutable(source : pathlib.Path):
-    shellArgs = shlex.split("file " + str(source))
-    outputRun = subprocess.check_output(shellArgs)
-    outputRun = str(outputRun).lower()
-    return ("executable" in outputRun)
+    filePath = os.path.realpath(source)
+    if not os.path.isfile(filePath):
+        return False
+    execMode = os.stat(filePath).st_mode
+    return os.access(filePath, os.X_OK)
 
 def writeFile(destinationFolder: pathlib.Path, nameFile :str, buffer,  overridingPermision) -> None:
 
@@ -223,7 +224,7 @@ def main():
             elif not isExecutable(args.sourceSolution):
                 print("Error: {} no es un ejecutable".format(args.sourceSolution))
                 exit(1)
-                
+
             for c in range(args.total_cases):
                 nameFile = args.case_name + str(c+1)
                 print("Current -->" , nameFile)
