@@ -40,5 +40,5 @@ Este programa funciona llamando creando subprocesos mientras llama a los ejectub
 ```bash
 caseGen dir/generadorInputs dir/solucionDelProblema dirDestino(por defecto esta es la dirección actual)
 ```
-
+<a href="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY" target="_blank"><img src="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY.svg" /></a>
 
