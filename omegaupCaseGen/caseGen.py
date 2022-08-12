@@ -217,6 +217,13 @@ def main():
 
 
         else:
+            if not isExecutable(args.sourceGenerator):
+                print("Error: {} no es un ejecutable".format(args.sourceGenerator))
+                exit(1)
+            elif not isExecutable(args.sourceSolution):
+                print("Error: {} no es un ejecutable".format(args.sourceSolution))
+                exit(1)
+                
             for c in range(args.total_cases):
                 nameFile = args.case_name + str(c+1)
                 print("Current -->" , nameFile)
