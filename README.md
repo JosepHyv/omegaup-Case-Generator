@@ -11,7 +11,7 @@ Este programa fue creado en python 3.10 corriendo sobre manjaro(linux) y testead
 | Metodo | Comando                                                                              |
 | :----- | :------------------------------------------------------------------------------------|
 | CURL   | `curl -fsSl https://raw.githubusercontent.com/JosepHyv/omegaup-Case-Generator/main/install.sh \| bash`    |
-| WGET   | `wget -O-' https://raw.githubusercontent.com/JosepHyv/omegaup-Case-Generator/main/install.sh \| bash` |
+| WGET   | `wget -O- https://raw.githubusercontent.com/JosepHyv/omegaup-Case-Generator/main/install.sh \| bash` |
 
 
 si utilizas zsh puedes reemplazar bash por zsh en las lineas anteriores 
@@ -37,6 +37,8 @@ cd omegaup-Case-Generator
 
 Este programa funciona llamando creando subprocesos mientras llama a los ejectubales que generan las input y outputs y genera el numero de casos que necesites en la dirección deseada, con permisos de sobreescritura
 1. Uso Basico 
-`caseGen dir/generadorInputs dir/solucionDelProblema dirDestino(por defecto esta es la dirección actual)`
+```bash
+caseGen dir/generadorInputs dir/solucionDelProblema dirDestino(por defecto esta es la dirección actual)
+```
 
 
