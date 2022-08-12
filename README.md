@@ -40,5 +40,26 @@ Este programa funciona llamando creando subprocesos mientras llama a los ejectub
 ```bash
 caseGen dir/generadorInputs dir/solucionDelProblema dirDestino(por defecto esta es la dirección actual)
 ```
-<a href="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY" target="_blank"><img src="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY.svg" /></a>
+<script id="asciicast-JlFXq3XjLQ81ugWPcsvea8ChY" src="https://asciinema.org/a/JlFXq3XjLQ81ugWPcsvea8ChY.js" async></script>
 
+2. Uso Solo Salidas 
+Esta opcion es util cuando necesitamos generar solo las salidas de cada entrada ya generada previamente
+```bash
+caseGen -o dirInputs dir/SolucionDelProblema dirDestino(por defecto sera igual a dirInputs)
+```
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="asciinema-player.css" />
+</head>
+<body>
+  <div id="player"></div>
+  <script src="asciinema-player.min.js"></script>
+  <script>
+    AsciinemaPlayer.create(
+      '514346.cast',
+      document.getElementById('player'),
+      { cols: 110, rows: 30 }
+    );
+  </script>
+</body>
+</html>
